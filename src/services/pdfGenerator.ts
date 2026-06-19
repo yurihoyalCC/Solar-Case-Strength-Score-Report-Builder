@@ -368,7 +368,7 @@ export async function generatePdfReport(lead: LeadApplication, shouldSave = true
   doc.setFontSize(18);
   doc.setTextColor(220, 38, 38);
   const costValStr = `$${score.fullTermCost.toLocaleString(undefined, {maximumFractionDigits: 0})}`;
-  doc.text(costValStr, 195 - doc.getTextWidth(costValStr) - 5, cardY + 14);
+  doc.text(costValStr, 195 - doc.getTextWidth(costValStr) - 5, cardY + 16.5);
 
   // Monthly and Annual perspectives directly below
   doc.setFont('helvetica', 'bold');

@@ -1378,24 +1378,18 @@ export default function FunnelPage() {
 
                   {/* PREMIUM HIGHLIGHT PANEL FOR ESTIMATED FULL-TERM COST */}
                   <div className="bg-[#FFF5F5] border-2 border-[#EF4444] rounded-2xl p-5 sm:p-6 relative overflow-hidden mb-2">
-                    {/* Upper right badge */}
-                    <div className="hidden sm:block absolute top-5 right-6 bg-white border border-[#EF4444] text-[#DC2626] text-[9px] font-extrabold px-2.5 py-1 rounded-full uppercase tracking-wider">
-                      Total Cost Commitment
-                    </div>
-
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                       <div className="space-y-1">
                         <span className="text-xs sm:text-sm font-bold text-[#DC2626] uppercase tracking-wider block">
                           Estimated Full-Term Cost
                         </span>
-                        <p className="text-[11px] sm:text-xs text-slate-705 font-medium leading-normal max-w-sm">
+                        <p className="text-[11px] sm:text-xs text-slate-700 font-medium leading-normal max-w-sm">
                           Projected total financial obligation over the life of the agreement.
                         </p>
                       </div>
                       
-                      <div className="text-left sm:text-right">
-                        {/* Mobile upper badge */}
-                        <div className="sm:hidden inline-block mb-1.5 bg-white border border-[#EF4444] text-[#DC2626] text-[8px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      <div className="text-left sm:text-right flex flex-col sm:items-start sm:items-end gap-1.5">
+                        <div className="bg-white border border-[#EF4444] text-[#DC2626] text-[8px] sm:text-[9px] font-extrabold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full uppercase tracking-wider inline-block w-fit">
                           Total Cost Commitment
                         </div>
                         <div className="text-3xl sm:text-4xl font-extrabold text-[#DC2626] tracking-tight leading-none">
