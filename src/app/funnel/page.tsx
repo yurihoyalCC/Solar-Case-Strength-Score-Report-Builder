@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useFunnel } from '@/context/FunnelContext';
 import { generatePdfReport } from '@/services/pdfGenerator';
 import { LeadApplication, leadDb, uploadPdfToStorage } from '@/services/db';
-import { SURVEY_QUESTIONS } from '@/services/scoring';
+import { SURVEY_QUESTIONS, RECOMMENDED_ACTIONS } from '@/services/scoring';
 import { 
   ShieldCheck, ArrowLeft, ArrowRight, User, Mail, Phone, MapPin, 
   DollarSign, Calculator, HelpCircle, CheckCircle, FileDown, 
@@ -137,7 +137,7 @@ export default function FunnelPage() {
         createdAt: new Date().toISOString()
       };
       
-      const doc = await generatePdfReport(lead, false);
+      const doc = await generatePdfReport(lead, false, aiSummary);
       const pdfBase64 = doc.output('datauristring').split(',')[1];
 
       // Upload PDF to storage if Firebase is configured
@@ -364,7 +364,7 @@ export default function FunnelPage() {
       createdAt: new Date().toISOString()
     };
     
-    await generatePdfReport(lead);
+    await generatePdfReport(lead, true, aiSummary);
   };
 
   // Helper validation
@@ -1274,6 +1274,44 @@ export default function FunnelPage() {
                   </div>
                 </div>
 
+                {/* Recommended Actions & Diagnostic Summary */}
+                <div className="bg-navy-950/60 p-6 rounded-2xl border border-navy-850 mb-6 text-left">
+                  <span className="block text-xs text-slate-400 font-bold uppercase tracking-wider mb-3">Recommended Actions & Diagnostic Summary:</span>
+                  
+                  {/* Recommended Actions */}
+                  {scoringResult.concernTags.length > 0 && (
+                    <div className="mb-4 space-y-3">
+                      <h4 className="text-xs font-bold text-gold-400 uppercase tracking-wider mb-2">Recommended Actions:</h4>
+                      <div className="space-y-3 text-xs leading-relaxed">
+                        {scoringResult.concernTags.map((tag, idx) => {
+                          const action = RECOMMENDED_ACTIONS[tag];
+                          return (
+                            <div key={idx} className="bg-navy-900/40 p-3 rounded-xl border border-navy-850">
+                              <span className="font-extrabold text-red-400 block mb-1">{tag}</span>
+                              <p className="text-slate-350">{action || 'Action details pending review.'}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="border-t border-navy-800/80 my-4"></div>
+                    </div>
+                  )}
+
+                  {/* Diagnostic Summary */}
+                  <h4 className="text-xs font-bold text-gold-400 uppercase tracking-wider mb-2">Diagnostic Summary:</h4>
+                  {loadingSummary ? (
+                    <div className="space-y-2.5 animate-pulse">
+                      <div className="h-3 bg-navy-850 rounded-full w-full"></div>
+                      <div className="h-3 bg-navy-850 rounded-full w-5/6"></div>
+                      <div className="h-3 bg-navy-850 rounded-full w-4/6"></div>
+                    </div>
+                  ) : (
+                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+                      {aiSummary}
+                    </p>
+                  )}
+                </div>
+
                 {/* CONTRACT & COST CALCULATOR METRICS */}
                 <div className="bg-navy-950/60 p-6 rounded-2xl border border-navy-850 mb-6 text-left">
                   <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider border-b border-navy-800 pb-2 mb-4">
@@ -1448,22 +1486,7 @@ export default function FunnelPage() {
                   </div>
                 </div>
 
-                {/* AI / Custom Generated summary */}
-                <div className="bg-navy-950/60 p-6 rounded-2xl border border-navy-850 mb-6">
-                  <span className="block text-xs text-slate-400 font-bold uppercase tracking-wider mb-3">Diagnostic Summary:</span>
-                  
-                  {loadingSummary ? (
-                    <div className="space-y-2.5 animate-pulse">
-                      <div className="h-3 bg-navy-850 rounded-full w-full"></div>
-                      <div className="h-3 bg-navy-850 rounded-full w-5/6"></div>
-                      <div className="h-3 bg-navy-850 rounded-full w-4/6"></div>
-                    </div>
-                  ) : (
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed whitespace-pre-line">
-                      {aiSummary}
-                    </p>
-                  )}
-                </div>
+
 
                 {/* CASE PROGRESS TRACKER */}
                 <div className="bg-navy-950/60 p-6 rounded-2xl border border-navy-850 mb-6 space-y-4 text-left">
