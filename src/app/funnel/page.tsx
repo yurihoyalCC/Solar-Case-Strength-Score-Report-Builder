@@ -1259,97 +1259,18 @@ export default function FunnelPage() {
                     Your answers show multiple review indicators that may be time-sensitive, especially if payments are escalating, the installer is no longer responsive, or you were promised savings that have not happened.
                   </p>
                 </div>
-
-                {/* CASE PROGRESS TRACKER */}
-                <div className="bg-navy-950/60 p-6 rounded-2xl border border-navy-850 mb-6 space-y-4 text-left">
-                  <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider border-b border-navy-800 pb-2 flex items-center gap-2">
-                    Case Progress Tracker
-                  </h3>
-
-                  {/* Progress bar */}
-                  <div className="space-y-2">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
-                      <span className="text-slate-200 font-extrabold flex items-center gap-1.5">
-                        Progress: <span className="text-gold-400">50% Complete</span>
+                {/* Key Findings (Potential Fraud Indicators & Legal Violations) */}
+                <div className="mb-6 bg-navy-950/60 p-6 rounded-2xl border border-navy-850">
+                  <span className="block text-xs text-slate-400 font-bold uppercase tracking-wider mb-3">Key Findings (Potential Fraud Indicators & Legal Violations):</span>
+                  <div className="flex flex-wrap gap-2">
+                    {scoringResult.concernTags.map((tag, idx) => (
+                      <span key={idx} className="bg-red-950/20 border border-red-500/20 text-[10px] text-red-400 px-2.5 py-1 rounded-full font-bold">
+                        {tag}
                       </span>
-                      <span className="text-slate-400 font-semibold">
-                        You have completed 3 of 6 review stages.
-                      </span>
-                    </div>
-                    <div className="w-full bg-navy-900 h-2 rounded-full overflow-hidden border border-navy-800">
-                      <div className="h-full bg-gradient-to-r from-gold-500 via-amber-500 to-gold-400 rounded-full" style={{ width: '50%' }}></div>
-                    </div>
-                    <p className="text-[11px] text-slate-400 italic">
-                      Your case has successfully advanced through the initial review phase.
-                    </p>
-                  </div>
-
-                  {/* Vertical Timeline steps */}
-                  <div className="relative border-l border-navy-800 pl-6 ml-3.5 space-y-5 pt-1">
-                    {[
-                      {
-                        title: "Step 1: Consumer Took Action",
-                        status: "Complete",
-                        desc: "You requested a professional review of your solar agreement and submitted your information for analysis.",
-                        completed: true,
-                        statusColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
-                      },
-                      {
-                        title: "Step 2: Fraud Survey Completed",
-                        status: "Complete",
-                        desc: "Your responses were reviewed and analyzed for potential sales conduct, financial disclosure, performance, and contract concerns.",
-                        completed: true,
-                        statusColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
-                      },
-                      {
-                        title: "Step 3: Diagnostic Review Completed",
-                        status: "QUALIFIED",
-                        desc: "Your Solar Case Strength Score™ and initial diagnostic findings have been generated and reviewed.",
-                        completed: true,
-                        statusColor: "text-gold-400 bg-gold-500/10 border-gold-500/20"
-                      },
-                      {
-                        title: "Step 4: Case Manager Review",
-                        status: "PENDING",
-                        desc: "A case specialist will review your submitted information, confirm the case details, and identify which supporting documents may be needed for legal review.",
-                        completed: false,
-                        statusColor: "text-slate-500 bg-navy-950 border-navy-800"
-                      },
-                      {
-                        title: "Step 5: Document Collection",
-                        status: "PENDING",
-                        desc: "Installation agreements, finance agreements, utility bills, payment records, and related documents may be requested for detailed review.",
-                        completed: false,
-                        statusColor: "text-slate-500 bg-navy-950 border-navy-800"
-                      },
-                      {
-                        title: "Step 6: Resolution Strategy & Final Report",
-                        status: "Pending",
-                        desc: "A comprehensive fraud report and recommended resolution pathway will be prepared based on all available evidence.",
-                        completed: false,
-                        statusColor: "text-slate-500 bg-navy-950 border-navy-800"
-                      }
-                    ].map((step, idx) => (
-                      <div key={idx} className="relative">
-                        {/* Circle dot on vertical line */}
-                        <div className={`absolute -left-[35px] top-0.5 w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold ${
-                          step.completed ? 'bg-gold-500 border-gold-400 text-navy-950' : 'bg-navy-950 border-navy-800 text-slate-650'
-                        }`}>
-                          {step.completed ? '✓' : idx + 1}
-                        </div>
-
-                        {/* Step Details */}
-                        <div className="space-y-1">
-                          <div className="flex items-center justify-between gap-2 flex-wrap">
-                            <h4 className="text-xs sm:text-sm font-bold text-white">{step.title}</h4>
-                            <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider border ${step.statusColor}`}>
-                              {step.status}
-                            </span>
-                          </div>
-                          <p className="text-xs text-slate-400 leading-relaxed max-w-xl">{step.desc}</p>
-                        </div>
-                      </div>
                     ))}
+                    {scoringResult.concernTags.length === 0 && (
+                      <span className="text-xs text-slate-500 italic">No concern flags triggered.</span>
+                    )}
                   </div>
                 </div>
 
@@ -1429,7 +1350,7 @@ export default function FunnelPage() {
 
                     {/* Legal Disclaimer */}
                     <div className="mt-4 pt-3 border-t border-[#EF4444]/10 text-[9px] text-slate-500 italic leading-relaxed">
-                      This estimate assumes the agreement remains active for the full contract term and does not account for future modifications, settlements, transfers, refinancing, or early termination.
+                      This estimate assumes the agreement remains active for the full contract term and does not account for future modifications, settlements, settlements, transfers, refinancing, or early termination.
                     </div>
                   </div>
                 </div>
@@ -1527,21 +1448,6 @@ export default function FunnelPage() {
                   </div>
                 </div>
 
-                {/* Concern Tags */}
-                <div className="mb-6">
-                  <span className="block text-xs text-slate-400 font-bold uppercase tracking-wider mb-2.5">Key Findings (Potential Fraud Indicators & Legal Violations):</span>
-                  <div className="flex flex-wrap gap-2">
-                    {scoringResult.concernTags.map((tag, idx) => (
-                      <span key={idx} className="bg-navy-950/80 border border-navy-800 text-[10px] text-gold-400 px-2.5 py-1 rounded-full font-bold">
-                        {tag}
-                      </span>
-                    ))}
-                    {scoringResult.concernTags.length === 0 && (
-                      <span className="text-xs text-slate-500 italic">No concern flags triggered.</span>
-                    )}
-                  </div>
-                </div>
-
                 {/* AI / Custom Generated summary */}
                 <div className="bg-navy-950/60 p-6 rounded-2xl border border-navy-850 mb-6">
                   <span className="block text-xs text-slate-400 font-bold uppercase tracking-wider mb-3">Diagnostic Summary:</span>
@@ -1557,6 +1463,99 @@ export default function FunnelPage() {
                       {aiSummary}
                     </p>
                   )}
+                </div>
+
+                {/* CASE PROGRESS TRACKER */}
+                <div className="bg-navy-950/60 p-6 rounded-2xl border border-navy-850 mb-6 space-y-4 text-left">
+                  <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider border-b border-navy-800 pb-2 flex items-center gap-2">
+                    Case Progress Tracker
+                  </h3>
+
+                  {/* Progress bar */}
+                  <div className="space-y-2">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
+                      <span className="text-slate-200 font-extrabold flex items-center gap-1.5">
+                        Progress: <span className="text-gold-400">50% Complete</span>
+                      </span>
+                      <span className="text-slate-400 font-semibold">
+                        You have completed 3 of 6 review stages.
+                      </span>
+                    </div>
+                    <div className="w-full bg-navy-900 h-2 rounded-full overflow-hidden border border-navy-800">
+                      <div className="h-full bg-gradient-to-r from-gold-500 via-amber-500 to-gold-400 rounded-full" style={{ width: '50%' }}></div>
+                    </div>
+                    <p className="text-[11px] text-slate-400 italic">
+                      Your case has successfully advanced through the initial review phase.
+                    </p>
+                  </div>
+
+                  {/* Vertical Timeline steps */}
+                  <div className="relative border-l border-navy-800 pl-6 ml-3.5 space-y-5 pt-1">
+                    {[
+                      {
+                        title: "Step 1: Consumer Took Action",
+                        status: "Complete",
+                        desc: "You requested a professional review of your solar agreement and submitted your information for analysis.",
+                        completed: true,
+                        statusColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                      },
+                      {
+                        title: "Step 2: Fraud Survey Completed",
+                        status: "Complete",
+                        desc: "Your responses were reviewed and analyzed for potential sales conduct, financial disclosure, performance, and contract concerns.",
+                        completed: true,
+                        statusColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                      },
+                      {
+                        title: "Step 3: Diagnostic Review Completed",
+                        status: "QUALIFIED",
+                        desc: "Your Solar Case Strength Score™ and initial diagnostic findings have been generated and reviewed.",
+                        completed: true,
+                        statusColor: "text-gold-400 bg-gold-500/10 border-gold-500/20"
+                      },
+                      {
+                        title: "Step 4: Case Manager Review",
+                        status: "PENDING",
+                        desc: "A case specialist will review your submitted information, confirm the case details, and identify which supporting documents may be needed for legal review.",
+                        completed: false,
+                        statusColor: "text-slate-500 bg-navy-950 border-navy-800"
+                      },
+                      {
+                        title: "Step 5: Document Collection",
+                        status: "PENDING",
+                        desc: "Installation agreements, finance agreements, utility bills, payment records, and related documents may be requested for detailed review.",
+                        completed: false,
+                        statusColor: "text-slate-500 bg-navy-950 border-navy-800"
+                      },
+                      {
+                        title: "Step 6: Resolution Strategy & Final Report",
+                        status: "Pending",
+                        desc: "A comprehensive fraud report and recommended resolution pathway will be prepared based on all available evidence.",
+                        completed: false,
+                        statusColor: "text-slate-500 bg-navy-950 border-navy-800"
+                      }
+                    ].map((step, idx) => (
+                      <div key={idx} className="relative">
+                        {/* Circle dot on vertical line */}
+                        <div className={`absolute -left-[35px] top-0.5 w-5 h-5 rounded-full border flex items-center justify-center text-[9px] font-bold ${
+                          step.completed ? 'bg-gold-500 border-gold-400 text-navy-950' : 'bg-navy-950 border-navy-800 text-slate-650'
+                        }`}>
+                          {step.completed ? '✓' : idx + 1}
+                        </div>
+
+                        {/* Step Details */}
+                        <div className="space-y-1">
+                          <div className="flex items-center justify-between gap-2 flex-wrap">
+                            <h4 className="text-xs sm:text-sm font-bold text-white">{step.title}</h4>
+                            <span className={`text-[9px] px-2 py-0.5 rounded font-bold uppercase tracking-wider border ${step.statusColor}`}>
+                              {step.status}
+                            </span>
+                          </div>
+                          <p className="text-xs text-slate-400 leading-relaxed max-w-xl">{step.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-navy-800/40 pt-6">

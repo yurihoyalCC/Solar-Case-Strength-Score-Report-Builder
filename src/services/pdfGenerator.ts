@@ -151,118 +151,45 @@ export async function generatePdfReport(lead: LeadApplication, shouldSave = true
   const splitUrgency = doc.splitTextToSize(urgencyText, 172);
   doc.text(splitUrgency, 18, 125);
 
-  // CASE PROGRESS TRACKER SECTION
+  // ==========================================
+  // KEY FINDINGS (POTENTIAL FRAUD INDICATORS & LEGAL VIOLATIONS) (Concern Tags)
+  // ==========================================
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
-  doc.text('CASE PROGRESS TRACKER', 15, 140);
+  doc.text('KEY FINDINGS (POTENTIAL FRAUD INDICATORS & LEGAL VIOLATIONS)', 15, 140);
   doc.setDrawColor(226, 232, 240);
   doc.line(15, 142, 195, 142);
 
-  // Progress bar
-  doc.setFillColor(241, 245, 249);
-  doc.rect(15, 145, 180, 2.5, 'F');
-  doc.setFillColor(goldAccent[0], goldAccent[1], goldAccent[2]);
-  doc.rect(15, 145, 90, 2.5, 'F'); // 50%
-
-  doc.setFontSize(7.5);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
-  doc.text('Progress: 50% Complete', 15, 151);
-  doc.setFont('helvetica', 'normal');
-  doc.text('You have completed 3 of 6 review stages.', 54, 151);
+  let tagX = 15;
+  let tagY = 150;
+  doc.setFontSize(8);
   
-  doc.setFont('helvetica', 'italic');
-  doc.setTextColor(slateGray[0], slateGray[1], slateGray[2]);
-  doc.text('Your case has successfully advanced through the initial review phase.', 115, 151);
-
-  // Vertical timeline line
-  doc.setDrawColor(203, 213, 225);
-  doc.setLineWidth(0.4);
-  doc.line(20, 159, 20, 223);
-
-  const steps = [
-    { 
-      title: 'Step 1: Consumer Took Action', 
-      status: 'Complete', 
-      desc: 'You requested a professional review of your solar agreement and submitted your information for analysis.',
-      completed: true,
-      statusColor: [16, 185, 129] // Emerald Green
-    },
-    { 
-      title: 'Step 2: Fraud Survey Completed', 
-      status: 'Complete', 
-      desc: 'Your responses were reviewed and analyzed for potential sales conduct, financial disclosure, performance, and contract concerns.',
-      completed: true,
-      statusColor: [16, 185, 129]
-    },
-    { 
-      title: 'Step 3: Diagnostic Review Completed', 
-      status: 'Qualified', 
-      desc: 'Your Solar Case Strength Score™ and initial diagnostic findings have been generated and reviewed.',
-      completed: true,
-      statusColor: [212, 175, 55] // Gold
-    },
-    { 
-      title: 'Step 4: Case Manager Review', 
-      status: 'Pending', 
-      desc: 'A case specialist will review your submitted information, confirm the case details, and identify which supporting documents may be needed for legal review.',
-      completed: false,
-      statusColor: [100, 116, 139] // Slate Gray
-    },
-    { 
-      title: 'Step 5: Document Collection', 
-      status: 'Pending', 
-      desc: 'Installation agreements, finance agreements, utility bills, payment records, and related documents may be requested for detailed review.',
-      completed: false,
-      statusColor: [100, 116, 139]
-    },
-    { 
-      title: 'Step 6: Resolution Strategy & Final Report', 
-      status: 'Pending', 
-      desc: 'A comprehensive fraud report and recommended resolution pathway will be prepared based on all available evidence.',
-      completed: false,
-      statusColor: [100, 116, 139]
-    }
-  ];
-
-  let stepY = 160;
-  steps.forEach(step => {
-    // Draw step circle
-    if (step.completed) {
-      doc.setFillColor(step.statusColor[0], step.statusColor[1], step.statusColor[2]);
-      doc.circle(20, stepY - 1, 2, 'F');
+  if (score.concernTags.length === 0) {
+    doc.setFont('helvetica', 'italic');
+    doc.setTextColor(slateGray[0], slateGray[1], slateGray[2]);
+    doc.text('No key findings or potential violations identified.', 18, tagY);
+  } else {
+    score.concernTags.forEach((tag) => {
+      const textWidth = doc.getTextWidth(tag);
+      if (tagX + textWidth + 8 > 195) {
+        tagX = 15;
+        tagY += 8;
+      }
       
-      // White checkmark
-      doc.setDrawColor(255, 255, 255);
-      doc.setLineWidth(0.35);
-      doc.line(19.2, stepY - 1, 19.8, stepY - 0.4);
-      doc.line(19.8, stepY - 0.4, 20.8, stepY - 1.6);
-    } else {
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(203, 213, 225);
-      doc.setLineWidth(0.4);
-      doc.circle(20, stepY - 1, 2, 'FD');
-    }
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8);
-    doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
-    doc.text(step.title, 25, stepY - 0.5);
-
-    doc.setFontSize(7);
-    doc.setTextColor(step.statusColor[0], step.statusColor[1], step.statusColor[2]);
-    doc.text(step.status.toUpperCase(), 195 - doc.getTextWidth(step.status.toUpperCase()) - 15, stepY - 0.5);
-
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7.5);
-    doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-    
-    const descLines = doc.splitTextToSize(step.desc, 155);
-    doc.text(descLines, 25, stepY + 3);
-    
-    stepY += 12;
-  });
+      // Soft red background, soft red border, red text
+      doc.setFillColor(254, 242, 242);
+      doc.setDrawColor(252, 165, 165);
+      doc.rect(tagX, tagY - 4, textWidth + 6, 6, 'F');
+      doc.rect(tagX, tagY - 4, textWidth + 6, 6, 'D');
+      
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(220, 38, 38);
+      doc.text(tag, tagX + 3, tagY);
+      
+      tagX += textWidth + 9;
+    });
+  }
 
   // RECOMMENDED NEXT STEPS (Pathway)
   doc.setFont('helvetica', 'bold');
@@ -414,51 +341,6 @@ export async function generatePdfReport(lead: LeadApplication, shouldSave = true
   currentY += cardHeight + 8; // shift down past the card and some margin
 
   // ==========================================
-  // SPECIFIC CONTRACT REVIEW INDICATORS (Concern Tags)
-  // ==========================================
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
-  doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
-  doc.text('KEY FINDINGS (POTENTIAL FRAUD INDICATORS & LEGAL VIOLATIONS)', 15, currentY);
-  doc.setDrawColor(226, 232, 240);
-  doc.line(15, currentY + 2, 195, currentY + 2);
-
-  currentY += 8;
-
-  let tagX = 15;
-  let tagY = currentY;
-  doc.setFontSize(8);
-  
-  if (score.concernTags.length === 0) {
-    doc.setFont('helvetica', 'italic');
-    doc.setTextColor(slateGray[0], slateGray[1], slateGray[2]);
-    doc.text('No key findings or potential violations identified.', 18, tagY);
-    currentY += 6;
-  } else {
-    score.concernTags.forEach((tag) => {
-      const textWidth = doc.getTextWidth(tag);
-      if (tagX + textWidth + 8 > 195) {
-        tagX = 15;
-        tagY += 8;
-      }
-      
-      doc.setFillColor(241, 245, 249);
-      doc.setDrawColor(203, 213, 225);
-      doc.rect(tagX, tagY - 4, textWidth + 6, 6, 'F');
-      doc.rect(tagX, tagY - 4, textWidth + 6, 6, 'D');
-      
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
-      doc.text(tag, tagX + 3, tagY);
-      
-      tagX += textWidth + 9;
-    });
-    currentY = tagY + 8; // set currentY after tags block
-  }
-
-  currentY += 4; // spacing
-
-  // ==========================================
   // ABOUT SOLAR RELEASE CO. SECTION
   // ==========================================
   doc.setDrawColor(226, 232, 240);
@@ -493,13 +375,130 @@ export async function generatePdfReport(lead: LeadApplication, shouldSave = true
   const splitPillars = doc.splitTextToSize(pillarsText, 180);
   doc.text(splitPillars, 15, currentY);
 
-  currentY += (splitPillars.length * 4) + 4;
+  currentY += (splitPillars.length * 4) + 6;
+
+  // ==========================================
+  // CASE PROGRESS TRACKER (Page 2, bottom)
+  // ==========================================
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
+  doc.text('CASE PROGRESS TRACKER', 15, currentY);
+  doc.setDrawColor(226, 232, 240);
+  doc.line(15, currentY + 2, 195, currentY + 2);
+
+  // Progress bar
+  doc.setFillColor(241, 245, 249);
+  doc.rect(15, currentY + 5, 180, 2.5, 'F');
+  doc.setFillColor(goldAccent[0], goldAccent[1], goldAccent[2]);
+  doc.rect(15, currentY + 5, 90, 2.5, 'F'); // 50%
+
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
+  doc.text('Progress: 50% Complete', 15, currentY + 11);
+  doc.setFont('helvetica', 'normal');
+  doc.text('You have completed 3 of 6 review stages.', 54, currentY + 11);
+  
+  doc.setFont('helvetica', 'italic');
+  doc.setTextColor(slateGray[0], slateGray[1], slateGray[2]);
+  doc.text('Your case has successfully advanced through the initial review phase.', 115, currentY + 11);
+
+  // Vertical timeline line
+  doc.setDrawColor(203, 213, 225);
+  doc.setLineWidth(0.4);
+  doc.line(20, currentY + 19, 20, currentY + 68);
+
+  const steps = [
+    { 
+      title: 'Step 1: Consumer Took Action', 
+      status: 'Complete', 
+      desc: 'You requested a professional review of your solar agreement and submitted your information for analysis.',
+      completed: true,
+      statusColor: [16, 185, 129] // Emerald Green
+    },
+    { 
+      title: 'Step 2: Fraud Survey Completed', 
+      status: 'Complete', 
+      desc: 'Your responses were reviewed and analyzed for potential sales conduct, financial disclosure, performance, and contract concerns.',
+      completed: true,
+      statusColor: [16, 185, 129]
+    },
+    { 
+      title: 'Step 3: Diagnostic Review Completed', 
+      status: 'Qualified', 
+      desc: 'Your Solar Case Strength Score™ and initial diagnostic findings have been generated and reviewed.',
+      completed: true,
+      statusColor: [212, 175, 55] // Gold
+    },
+    { 
+      title: 'Step 4: Case Manager Review', 
+      status: 'Pending', 
+      desc: 'A case specialist will review your submitted information, confirm the case details, and identify which supporting documents may be needed for legal review.',
+      completed: false,
+      statusColor: [100, 116, 139] // Slate Gray
+    },
+    { 
+      title: 'Step 5: Document Collection', 
+      status: 'Pending', 
+      desc: 'Installation agreements, finance agreements, utility bills, payment records, and related documents may be requested for detailed review.',
+      completed: false,
+      statusColor: [100, 116, 139]
+    },
+    { 
+      title: 'Step 6: Resolution Strategy & Final Report', 
+      status: 'Pending', 
+      desc: 'A comprehensive fraud report and recommended resolution pathway will be prepared based on all available evidence.',
+      completed: false,
+      statusColor: [100, 116, 139]
+    }
+  ];
+
+  let stepY = currentY + 20;
+  steps.forEach(step => {
+    // Draw step circle
+    if (step.completed) {
+      doc.setFillColor(step.statusColor[0], step.statusColor[1], step.statusColor[2]);
+      doc.circle(20, stepY - 1, 2, 'F');
+      
+      // White checkmark
+      doc.setDrawColor(255, 255, 255);
+      doc.setLineWidth(0.35);
+      doc.line(19.2, stepY - 1, 19.8, stepY - 0.4);
+      doc.line(19.8, stepY - 0.4, 20.8, stepY - 1.6);
+    } else {
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(203, 213, 225);
+      doc.setLineWidth(0.4);
+      doc.circle(20, stepY - 1, 2, 'FD');
+    }
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
+    doc.text(step.title, 25, stepY - 0.5);
+
+    doc.setFontSize(7);
+    doc.setTextColor(step.statusColor[0], step.statusColor[1], step.statusColor[2]);
+    doc.text(step.status.toUpperCase(), 195 - doc.getTextWidth(step.status.toUpperCase()) - 15, stepY - 0.5);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7.5);
+    doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+    
+    const descLines = doc.splitTextToSize(step.desc, 155);
+    doc.text(descLines, 25, stepY + 3);
+    
+    stepY += 9; // Compact vertical spacing
+  });
+
+  currentY = stepY + 2;
 
   // ==========================================
   // Contact Info Box (dynamic bottom check)
   // ==========================================
   // Draw Contact Info box at currentY (with a fallback to make sure it doesn't overlap footer)
-  const contactBoxY = Math.max(currentY, 220);
+  const contactBoxY = Math.max(currentY, 252);
   const contactBoxHeight = 28;
   doc.setFillColor(248, 250, 252);
   doc.rect(15, contactBoxY, 180, contactBoxHeight, 'F');
