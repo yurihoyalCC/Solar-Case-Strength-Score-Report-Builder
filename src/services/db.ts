@@ -85,7 +85,7 @@ const PRE_SEEDED_LEADS: LeadApplication[] = [
       projectedProjections: [],
       savingsLossStatus: 'losing',
       netDifference: -24200,
-      concernTags: ['ITC Rebate Guarantee', 'Verification Call Coercion', 'Amortization Misrepresentation', 'Contract Terms Ambiguity', 'Solar Cost Increase Premium']
+      concernTags: ['Guarantee of Federal Tax Credits and Rebates', 'Coercion to Conceal Promises During Verification Call', 'Misrepresentation of Tax Credit Re-Amortization', 'Concealment of Material Loan Terms and Total Cost', 'Net Increase in Total Energy Costs After Installation']
     }
   },
   {
@@ -142,7 +142,7 @@ const PRE_SEEDED_LEADS: LeadApplication[] = [
       projectedProjections: [],
       savingsLossStatus: 'losing',
       netDifference: -15800,
-      concernTags: ['Lease/PPA Exposure', 'Surprise UCC Property Lien', 'Property Sale Title Complications', 'Severe Financial Stress', 'Compounding Payment Escalators']
+      concernTags: ['Misrepresentation of Lease/PPA as Ownership', 'Undisclosed UCC-1 Fixture Filing and Property Lien', 'Impairment of Property Title and Transferability', 'Imposition of Severe Financial Hardship', 'Concealed Payment Escalation Provisions']
     }
   },
   {
@@ -199,7 +199,7 @@ const PRE_SEEDED_LEADS: LeadApplication[] = [
       projectedProjections: [],
       savingsLossStatus: 'losing',
       netDifference: -43100,
-      concernTags: ['ITC Rebate Guarantee', 'Verification Call Coercion', 'Amortization Misrepresentation', 'Contract Terms Ambiguity', 'Lease/PPA Exposure']
+      concernTags: ['Guarantee of Federal Tax Credits and Rebates', 'Coercion to Conceal Promises During Verification Call', 'Misrepresentation of Tax Credit Re-Amortization', 'Concealment of Material Loan Terms and Total Cost', 'Misrepresentation of Lease/PPA as Ownership']
     }
   }
 ];

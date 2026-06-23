@@ -419,7 +419,7 @@ export async function generatePdfReport(lead: LeadApplication, shouldSave = true
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
   doc.setTextColor(navyDark[0], navyDark[1], navyDark[2]);
-  doc.text('SPECIFIC CONTRACT REVIEW INDICATORS', 15, currentY);
+  doc.text('KEY FINDINGS (POTENTIAL FRAUD INDICATORS & LEGAL VIOLATIONS)', 15, currentY);
   doc.setDrawColor(226, 232, 240);
   doc.line(15, currentY + 2, 195, currentY + 2);
 
@@ -432,7 +432,7 @@ export async function generatePdfReport(lead: LeadApplication, shouldSave = true
   if (score.concernTags.length === 0) {
     doc.setFont('helvetica', 'italic');
     doc.setTextColor(slateGray[0], slateGray[1], slateGray[2]);
-    doc.text('No major indicators flagged. Contract meets standard baseline benchmarks.', 18, tagY);
+    doc.text('No key findings or potential violations identified.', 18, tagY);
     currentY += 6;
   } else {
     score.concernTags.forEach((tag) => {

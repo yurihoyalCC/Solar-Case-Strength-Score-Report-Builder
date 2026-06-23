@@ -1529,7 +1529,7 @@ export default function FunnelPage() {
 
                 {/* Concern Tags */}
                 <div className="mb-6">
-                  <span className="block text-xs text-slate-400 font-bold uppercase tracking-wider mb-2.5">Flagged Risk Tags:</span>
+                  <span className="block text-xs text-slate-400 font-bold uppercase tracking-wider mb-2.5">Key Findings (Potential Fraud Indicators & Legal Violations):</span>
                   <div className="flex flex-wrap gap-2">
                     {scoringResult.concernTags.map((tag, idx) => (
                       <span key={idx} className="bg-navy-950/80 border border-navy-800 text-[10px] text-gold-400 px-2.5 py-1 rounded-full font-bold">
